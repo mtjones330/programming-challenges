@@ -2,10 +2,8 @@
 #include<vector>
 using namespace std;
 
-const int NMAX = 21;
-
 bool isSolution(int k, int n) {
-  k == n;
+  return k == n;
 }
 
 void processSolution(int a[], int n) {
@@ -41,8 +39,8 @@ void backtrack(int a[], int k, int n) {
 }
 
 int main() {
-  int a[NMAX] = { false };
-  int n = 20;
+  int n = 3;
+  int a[32] = { false };
 
   backtrack(a, 0, n);
 }
