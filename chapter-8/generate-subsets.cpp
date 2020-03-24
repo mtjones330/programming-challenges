@@ -39,8 +39,8 @@ void backtrack(int a[], int k, int n) {
 }
 
 int main() {
-  int n = 3;
   int a[32] = { false };
+  int n = 3;
 
   backtrack(a, 0, n);
 }
