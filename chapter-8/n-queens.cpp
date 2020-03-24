@@ -2,6 +2,7 @@
 #include <vector>
 using namespace std;
 
+int n = 8;
 int solutionCount = 0;
 
 bool isSolution(int k, int n) {
@@ -50,8 +51,7 @@ void backtrack(int a[], int k, int n) {
 }
 
 int main() {
-  int n = 8;
-  int a[n + 1] = { 0 };
+  int a[32] = { 0 };
 
   backtrack(a, 0, n);
 
