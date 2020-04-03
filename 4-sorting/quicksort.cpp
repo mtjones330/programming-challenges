@@ -33,11 +33,9 @@ int main() {
 
   quicksort(s, 0, size - 1);
 
-  printf("[ ");
-  
   for (int i = 0; i < size; i++) {
     printf("%d ", s[i]);
   }
 
-  printf("]\n");
+  printf("\n");
 }
