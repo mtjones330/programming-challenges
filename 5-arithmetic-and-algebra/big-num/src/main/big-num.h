@@ -13,6 +13,7 @@ class BigNum {
     char digits[MAXDIGITS];
     int nDigits;
     int signBit;
+
     void init();
     void digitShift(BigNum *n, int d);
     void addBigNum(BigNum *a, BigNum *b, BigNum *c);
@@ -22,16 +23,18 @@ class BigNum {
     int compareBigNum(BigNum *a, BigNum*b);
     int toInt(char c);
     char toChar(int d);
-    BigNum toBigNum(char str[]);
 
   public:
     BigNum();
     BigNum(std::string str);
+
     BigNum operator+ (BigNum &n);
+
     bool operator< (BigNum &n);
     bool operator== (BigNum &n);
     bool operator!= (BigNum &n);
     bool operator> (BigNum &n);
+
     std::string toString();
 };
 

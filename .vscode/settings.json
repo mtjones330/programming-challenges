@@ -1,5 +1,4 @@
 {
-    "editor.tabSize": 2,
     "files.associations": {
         "ostream": "cpp",
         "array": "cpp",
@@ -40,6 +39,5 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp"
-    },
-    "files.trimTrailingWhitespace": true
+    }
 }

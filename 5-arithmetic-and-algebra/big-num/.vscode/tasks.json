@@ -5,16 +5,11 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "g++ build active file",
-      "command": "/usr/bin/g++",
-      "args": [
-        "-g",
-        "${file}",
-        "-o",
-        "${workspaceFolder}/a.out"
-      ],
+      "label": "make big-num-tests",
+      "command": "/usr/bin/make",
+      "args": [],
       "options": {
-        "cwd": "/usr/bin"
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": [
         "$gcc"

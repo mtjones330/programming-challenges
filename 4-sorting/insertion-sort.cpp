@@ -2,7 +2,7 @@
 #include <algorithm>
 using namespace std;
 
-int insertionSort(int s[], int n) {
+void insertionSort(int s[], int n) {
   for (int i = 1; i < n; i++) {
     int j = i;
 

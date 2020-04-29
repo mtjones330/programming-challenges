@@ -1,7 +1,6 @@
 #include <iostream>
 #include "big-num.h"
 
-
 BigNum::BigNum() {
   init();
 }
@@ -24,7 +23,6 @@ BigNum::BigNum(std::string str) {
   }
 }
 
-
 void BigNum::init() {
   signBit = PLUS;
   nDigits = 1;
@@ -43,7 +41,7 @@ BigNum BigNum::operator+ (BigNum &n) {
 }
 
 bool BigNum::operator< (BigNum &n) {
-  if (compareBigNum(this, &n) == -1) {
+  if (compareBigNum(this, &n) == LESSTHAN) {
     return true;
   }
 
@@ -51,7 +49,7 @@ bool BigNum::operator< (BigNum &n) {
 }
 
 bool BigNum::operator== (BigNum &n) {
-  if(compareBigNum(this, &n) == 0) {
+  if(compareBigNum(this, &n) == EQUALTO) {
     return true;
   }
 
@@ -63,14 +61,14 @@ bool BigNum::operator!= (BigNum &n) {
 }
 
 bool BigNum::operator> (BigNum &n) {
-  if (compareBigNum(this, &n) == 1) {
+  if (compareBigNum(this, &n) == GREATERTHAN) {
     return true;
   }
 
   return false;
 }
 
-int BigNum::compareBigNum(BigNum *a, BigNum * b) {
+int BigNum::compareBigNum(BigNum *a, BigNum *b) {
   if (a->signBit == MINUS && b->signBit == PLUS) return LESSTHAN;
   if (a->signBit == PLUS && b->signBit == MINUS) return GREATERTHAN;
 
@@ -100,6 +98,8 @@ void BigNum::zeroJustify(BigNum *n) {
   if (n->nDigits == 0 && toInt(n->digits[0]) == 0) {
     n->signBit = PLUS;
   }
+
+  n->nDigits++;
 }
 
 
@@ -111,7 +111,7 @@ void BigNum::subtractBigNum(BigNum *a, BigNum* b, BigNum* c) {
     return;
   }
 
-  if (compareBigNum(a, b) == PLUS) {
+  if (a < b) {
     subtractBigNum(b, a, c);
     c->signBit = MINUS;
     return;
@@ -216,34 +216,6 @@ int BigNum::toInt(char c) {
 
 char BigNum::toChar(int d) {
   return d + '0';
-}
-
-BigNum BigNum::toBigNum(char str[]) {
-  BigNum n;
-  int nDigits = 1;
-
-  while(toInt(str[nDigits] != 0)) {
-    nDigits++;
-  }
-
-  n.nDigits = nDigits;
-
-  int shift = 0;
-
-  if (str[0] == '+') {
-    n.signBit = PLUS;
-    shift = 1;
-  }
-  else if (str[0] == '-') {
-    n.signBit = MINUS;
-    shift = 1;
-  }
-
-  for (int i = 0; i < nDigits; i++) {
-    char tmp = str[i + shift];
-    n.digits[i] = str[nDigits - 1 - i];
-    str[nDigits - 1 - i] = tmp;
-  }
 }
 
 std::string BigNum::toString() {
