@@ -4,6 +4,9 @@
 #define MAXDIGITS 100
 #define PLUS 1
 #define MINUS -1
+#define LESSTHAN -1
+#define EQUALTO 0
+#define GREATERTHAN 1
 
 class BigNum {
   private:

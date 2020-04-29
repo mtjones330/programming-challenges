@@ -71,18 +71,25 @@ bool BigNum::operator> (BigNum &n) {
 }
 
 int BigNum::compareBigNum(BigNum *a, BigNum * b) {
-  if (a->signBit == MINUS && b->signBit == PLUS) return PLUS;
-  if (a->signBit == PLUS && b->signBit == MINUS) return MINUS;
+  if (a->signBit == MINUS && b->signBit == PLUS) return LESSTHAN;
+  if (a->signBit == PLUS && b->signBit == MINUS) return GREATERTHAN;
 
-  if (a->nDigits < b->nDigits) return PLUS;
-  if (a->nDigits > b->nDigits) return MINUS;
-
-  for (int i = a->nDigits; i >= 0; i--) {
-    if (a->digits[i] < b->digits[i]) return a->signBit;
-    if (a->digits[i] > b->digits[i]) return MINUS * a->signBit;
+  if (a->signBit == PLUS && b->signBit == PLUS) {
+    if (a->nDigits < b->nDigits) return LESSTHAN;
+    if (a->nDigits > b->nDigits) return GREATERTHAN;
   }
 
-  return 0;
+  if (a->signBit == MINUS && b->signBit == MINUS) {
+    if (a->nDigits < b->nDigits) return GREATERTHAN;
+    if (a->nDigits > b->nDigits) return LESSTHAN;
+  }
+
+  for (int i = a->nDigits - 1; i >= 0; i--) {
+    if (a->digits[i] > b->digits[i]) return PLUS * a->signBit;
+    if (a->digits[i] < b->digits[i]) return MINUS * a->signBit;
+  }
+
+  return EQUALTO;
 }
 
 void BigNum::zeroJustify(BigNum *n) {
