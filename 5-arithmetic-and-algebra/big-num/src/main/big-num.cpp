@@ -111,7 +111,7 @@ void BigNum::subtractBigNum(BigNum *a, BigNum* b, BigNum* c) {
     return;
   }
 
-  if (a < b) {
+  if (*a < *b) {
     subtractBigNum(b, a, c);
     c->signBit = MINUS;
     return;

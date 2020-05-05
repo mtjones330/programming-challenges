@@ -141,7 +141,6 @@ void comparisonTests() {
   }
 }
 
-
 void additionTests() {
   vector<MathTestCase> testCases = {
     MathTestCase("-1", "-1", "-2"),
