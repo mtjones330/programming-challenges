@@ -19,7 +19,7 @@ class BigNum {
     void addBigNum(BigNum *a, BigNum *b, BigNum *c);
     void subtractBigNum(BigNum *a, BigNum *b, BigNum *c);
     void multiplyBigNum(BigNum *a, BigNum *b, BigNum *c);
-    void zeroJustify(BigNum *n);
+    void adjustDigits(BigNum *n);
     int compareBigNum(BigNum *a, BigNum*b);
     int toInt(char c);
     char toChar(int d);
@@ -29,6 +29,7 @@ class BigNum {
     BigNum(std::string str);
 
     BigNum operator+ (BigNum &n);
+    BigNum operator- (BigNum &n);
 
     bool operator< (BigNum &n);
     bool operator== (BigNum &n);

@@ -40,6 +40,14 @@ BigNum BigNum::operator+ (BigNum &n) {
   return c;
 }
 
+BigNum BigNum::operator- (BigNum &n) {
+  BigNum c;
+
+  subtractBigNum(this, &n, &c);
+
+  return c;
+}
+
 bool BigNum::operator< (BigNum &n) {
   if (compareBigNum(this, &n) == LESSTHAN) {
     return true;
@@ -90,7 +98,7 @@ int BigNum::compareBigNum(BigNum *a, BigNum *b) {
   return EQUALTO;
 }
 
-void BigNum::zeroJustify(BigNum *n) {
+void BigNum::adjustDigits(BigNum *n) {
   while (n->nDigits > 0 && toInt(n->digits[n->nDigits]) == 0) {
     n->nDigits--;
   }
@@ -136,7 +144,7 @@ void BigNum::subtractBigNum(BigNum *a, BigNum* b, BigNum* c) {
     c->digits[i] = toChar(v % 10);
   }
 
-  zeroJustify(c);
+  adjustDigits(c);
 }
 
 void BigNum::addBigNum(BigNum *a, BigNum *b, BigNum *c) {
@@ -171,7 +179,7 @@ void BigNum::addBigNum(BigNum *a, BigNum *b, BigNum *c) {
     carry = addend / 10;
   }
 
-  zeroJustify(c);
+  adjustDigits(c);
 }
 
 void BigNum::digitShift(BigNum *n, int d) {
@@ -207,7 +215,7 @@ void BigNum::multiplyBigNum(BigNum *a, BigNum *b, BigNum *c) {
 
   c->signBit = a->signBit * b->signBit;
 
-  zeroJustify(c);
+  adjustDigits(c);
 }
 
 int BigNum::toInt(char c) {

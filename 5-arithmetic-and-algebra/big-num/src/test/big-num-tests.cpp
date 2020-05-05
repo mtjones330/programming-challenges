@@ -6,6 +6,7 @@ using namespace std;
 void toStringTests();
 void comparisonTests();
 void additionTests();
+void subtractionTests();
 
 struct ToStringTestCase {
   string input;
@@ -51,6 +52,7 @@ int main() {
   toStringTests();
   comparisonTests();
   additionTests();
+  subtractionTests();
 }
 
 void toStringTests() {
@@ -183,6 +185,52 @@ void additionTests() {
 
     if (expected != actual) {
       cout << a << " + " << b << " = expected: " << expected << ", actual: " << actual << endl;
+    }
+  }
+}
+
+void subtractionTests() {
+  vector<MathTestCase> testCases = {
+    MathTestCase("-1", "-1", "0"),
+    MathTestCase("-1", "0", "-1"),
+    MathTestCase("-1", "1", "-2"),
+    MathTestCase("0", "-1", "1"),
+    MathTestCase("0", "0", "0"),
+    MathTestCase("0", "1", "-1"),
+    MathTestCase("1", "-1", "2"),
+    MathTestCase("1", "0", "1"),
+    MathTestCase("1", "1", "0"),
+
+    MathTestCase("-12", "-12", "0"),
+    MathTestCase("-12", "0", "-12"),
+    MathTestCase("-12", "12", "-24"),
+    MathTestCase("0", "-12", "12"),
+    MathTestCase("0", "0", "0"),
+    MathTestCase("0", "12", "-12"),
+    MathTestCase("12", "-12", "24"),
+    MathTestCase("12", "0", "12"),
+    MathTestCase("12", "12", "0"),
+
+    MathTestCase("-1", "-12", "11"),
+    MathTestCase("-12", "0", "-12"),
+    MathTestCase("-1", "12", "-13"),
+    MathTestCase("0", "-12", "12"),
+    MathTestCase("0", "12", "-12"),
+    MathTestCase("1", "-12", "13"),
+    MathTestCase("12", "0", "12"),
+    MathTestCase("1", "12", "-11"),
+  };
+
+  for (uint i = 0; i < testCases.size(); i++) {
+    MathTestCase tc = testCases.at(i);
+
+    BigNum a = BigNum(tc.a);
+    BigNum b = BigNum(tc.b);
+    BigNum expected = BigNum(tc.expected);
+    BigNum actual = a - b;
+
+    if (expected != actual) {
+      cout << a << " - " << b << " = expected: " << expected << ", actual: " << actual << endl;
     }
   }
 }
