@@ -7,6 +7,7 @@ void toStringTests();
 void comparisonTests();
 void additionTests();
 void subtractionTests();
+void multiplicationTests();
 
 struct ToStringTestCase {
   string input;
@@ -53,6 +54,7 @@ int main() {
   comparisonTests();
   additionTests();
   subtractionTests();
+  multiplicationTests();
 }
 
 void toStringTests() {
@@ -188,7 +190,6 @@ void additionTests() {
     }
   }
 }
-
 void subtractionTests() {
   vector<MathTestCase> testCases = {
     MathTestCase("-1", "-1", "0"),
@@ -231,6 +232,52 @@ void subtractionTests() {
 
     if (expected != actual) {
       cout << a << " - " << b << " = expected: " << expected << ", actual: " << actual << endl;
+    }
+  }
+}
+
+void multiplicationTests() {
+  vector<MathTestCase> testCases = {
+    MathTestCase("-1", "-1", "1"),
+    MathTestCase("-1", "0", "0"),
+    MathTestCase("-1", "1", "-1"),
+    MathTestCase("0", "-1", "0"),
+    MathTestCase("0", "0", "0"),
+    MathTestCase("0", "1", "0"),
+    MathTestCase("1", "-1", "-1"),
+    MathTestCase("1", "0", "0"),
+    MathTestCase("1", "1", "1"),
+
+    MathTestCase("-12", "-12", "144"),
+    MathTestCase("-12", "0", "0"),
+    MathTestCase("-12", "12", "-144"),
+    MathTestCase("0", "-12", "0"),
+    MathTestCase("0", "0", "0"),
+    MathTestCase("0", "12", "0"),
+    MathTestCase("12", "-12", "-144"),
+    MathTestCase("12", "0", "0"),
+    MathTestCase("12", "12", "144"),
+
+    MathTestCase("-1", "-12", "12"),
+    MathTestCase("-12", "0", "0"),
+    MathTestCase("-1", "12", "-12"),
+    MathTestCase("0", "-12", "0"),
+    MathTestCase("0", "12", "0"),
+    MathTestCase("1", "-12", "-12"),
+    MathTestCase("12", "0", "0"),
+    MathTestCase("1", "12", "12"),
+  };
+
+  for (uint i = 0; i < testCases.size(); i++) {
+    MathTestCase tc = testCases.at(i);
+
+    BigNum a = BigNum(tc.a);
+    BigNum b = BigNum(tc.b);
+    BigNum expected = BigNum(tc.expected);
+    BigNum actual = a * b;
+
+    if (expected != actual) {
+      cout << a << " * " << b << " = expected: " << expected << ", actual: " << actual << endl;
     }
   }
 }

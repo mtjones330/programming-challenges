@@ -18,7 +18,7 @@ class BigNum {
     void digitShift(BigNum *n, int d);
     BigNum addBigNum(BigNum *a, BigNum *b);
     BigNum subtractBigNum(BigNum *a, BigNum *b);
-    void multiplyBigNum(BigNum *a, BigNum *b, BigNum *c);
+    BigNum multiplyBigNum(BigNum *a, BigNum *b);
     BigNum& adjustDigits();
     int compareBigNum(BigNum *a, BigNum*b);
     int toInt(char c);
@@ -30,6 +30,7 @@ class BigNum {
 
     BigNum operator+ (BigNum &n);
     BigNum operator- (BigNum &n);
+    BigNum operator* (BigNum &n);
 
     bool operator< (BigNum &n);
     bool operator== (BigNum &n);

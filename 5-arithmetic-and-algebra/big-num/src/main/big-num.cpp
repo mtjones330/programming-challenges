@@ -40,6 +40,10 @@ BigNum BigNum::operator- (BigNum &n) {
   return subtractBigNum(this, &n);
 }
 
+BigNum BigNum::operator* (BigNum &n) {
+  return multiplyBigNum(this, &n);
+}
+
 bool BigNum::operator< (BigNum &n) {
   if (compareBigNum(this, &n) == LESSTHAN) {
     return true;
@@ -196,24 +200,23 @@ void BigNum::digitShift(BigNum *n, int d) {
   n->nDigits = n->nDigits + d;
 }
 
-void BigNum::multiplyBigNum(BigNum *a, BigNum *b, BigNum *c) {
+BigNum BigNum::multiplyBigNum(BigNum *a, BigNum *b) {
+  BigNum c;
   BigNum row;
-  BigNum tmp;
 
   row = *a;
 
-  for (int i = 0; i <= b->nDigits; i++) {
+  for (int i = 0; i < b->nDigits; i++) {
     for (int j = 1; j <= toInt(b->digits[i]); j++) {
-      tmp = addBigNum(c, &row);
-      *c = tmp;
+      c = addBigNum(&c, &row);
     }
 
     digitShift(&row, 1);
   }
 
-  c->signBit = a->signBit * b->signBit;
+  c.signBit = a->signBit * b->signBit;
 
-  c->adjustDigits();
+  return c.adjustDigits();
 }
 
 int BigNum::toInt(char c) {
