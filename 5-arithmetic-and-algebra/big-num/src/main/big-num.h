@@ -16,10 +16,10 @@ class BigNum {
 
     void init();
     void digitShift(BigNum *n, int d);
-    void addBigNum(BigNum *a, BigNum *b, BigNum *c);
-    void subtractBigNum(BigNum *a, BigNum *b, BigNum *c);
+    BigNum addBigNum(BigNum *a, BigNum *b);
+    BigNum subtractBigNum(BigNum *a, BigNum *b);
     void multiplyBigNum(BigNum *a, BigNum *b, BigNum *c);
-    void adjustDigits(BigNum *n);
+    BigNum& adjustDigits();
     int compareBigNum(BigNum *a, BigNum*b);
     int toInt(char c);
     char toChar(int d);

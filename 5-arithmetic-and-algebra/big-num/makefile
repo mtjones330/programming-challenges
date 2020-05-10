@@ -1,5 +1,5 @@
 CC := g++
-CPPFLAGS := -Wall -g
+CPPFLAGS := -std=c++11 -Wall -Wextra -Werror -g
 SRCDIR := src
 MAINDIR := $(SRCDIR)/main
 TESTDIR := $(SRCDIR)/test

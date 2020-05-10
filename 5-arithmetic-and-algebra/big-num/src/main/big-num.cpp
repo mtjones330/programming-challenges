@@ -33,19 +33,11 @@ void BigNum::init() {
 }
 
 BigNum BigNum::operator+ (BigNum &n) {
-  BigNum c;
-
-  addBigNum(this, &n, &c);
-
-  return c;
+  return addBigNum(this, &n);
 }
 
 BigNum BigNum::operator- (BigNum &n) {
-  BigNum c;
-
-  subtractBigNum(this, &n, &c);
-
-  return c;
+  return subtractBigNum(this, &n);
 }
 
 bool BigNum::operator< (BigNum &n) {
@@ -98,38 +90,42 @@ int BigNum::compareBigNum(BigNum *a, BigNum *b) {
   return EQUALTO;
 }
 
-void BigNum::adjustDigits(BigNum *n) {
-  while (n->nDigits > 0 && toInt(n->digits[n->nDigits]) == 0) {
-    n->nDigits--;
+BigNum& BigNum::adjustDigits() {
+  while (nDigits > 0 && toInt(digits[nDigits]) == 0) {
+    nDigits--;
   }
 
-  if (n->nDigits == 0 && toInt(n->digits[0]) == 0) {
-    n->signBit = PLUS;
+  if (nDigits == 0 && toInt(digits[0]) == 0) {
+    signBit = PLUS;
   }
 
-  n->nDigits++;
+  nDigits++;
+
+  return *this;
 }
 
 
-void BigNum::subtractBigNum(BigNum *a, BigNum* b, BigNum* c) {
+BigNum BigNum::subtractBigNum(BigNum *a, BigNum* b) {
+  BigNum c;
+
   if (a->signBit == MINUS || b->signBit == MINUS) {
     b->signBit = -1 * b->signBit;
-    addBigNum(a, b, c);
+    c = addBigNum(a, b);
     b->signBit = -1 * b->signBit;
-    return;
+    return c;
   }
 
   if (*a < *b) {
-    subtractBigNum(b, a, c);
-    c->signBit = MINUS;
-    return;
+    c = subtractBigNum(b, a);
+    c.signBit = MINUS;
+    return c;
   }
 
-  c->nDigits = std::max(a->nDigits, b->nDigits);
+  c.nDigits = std::max(a->nDigits, b->nDigits);
 
   int borrow = 0;
 
-  for (int i = 0; i <= c->nDigits; i++) {
+  for (int i = 0; i <= c.nDigits; i++) {
     int v = toInt(a->digits[i]) - borrow - toInt(b->digits[i]);
 
     if (toInt(a->digits[i]) > 0) {
@@ -141,45 +137,47 @@ void BigNum::subtractBigNum(BigNum *a, BigNum* b, BigNum* c) {
       borrow = 1;
     }
 
-    c->digits[i] = toChar(v % 10);
+    c.digits[i] = toChar(v % 10);
   }
 
-  adjustDigits(c);
+  return c.adjustDigits();
 }
 
-void BigNum::addBigNum(BigNum *a, BigNum *b, BigNum *c) {
+BigNum BigNum::addBigNum(BigNum *a, BigNum *b) {
+  BigNum c;
+
   if (a->signBit == b->signBit) {
-    c->signBit = a->signBit;
+    c.signBit = a->signBit;
   }
 
   else {
     if (a->signBit == MINUS) {
       a->signBit = PLUS;
-      subtractBigNum(b, a, c);
+      c = subtractBigNum(b, a);
       a->signBit = MINUS;
     }
 
     else {
       b->signBit  = PLUS;
-      subtractBigNum(a, b, c);
+      c = subtractBigNum(a, b);
       b->signBit = MINUS;
     }
 
-    return;
+    return c;
   }
 
-  c->nDigits = a->nDigits + b->nDigits;
+  c.nDigits = a->nDigits + b->nDigits;
 
   int carry = 0;
 
-  for (int i = 0; i <= (c->nDigits); i++) {
+  for (int i = 0; i <= (c.nDigits); i++) {
     int addend = carry + toInt(a->digits[i]) + toInt(b->digits[i]);
 
-    c->digits[i] = toChar(addend % 10);
+    c.digits[i] = toChar(addend % 10);
     carry = addend / 10;
   }
 
-  adjustDigits(c);
+  return c.adjustDigits();
 }
 
 void BigNum::digitShift(BigNum *n, int d) {
@@ -206,7 +204,7 @@ void BigNum::multiplyBigNum(BigNum *a, BigNum *b, BigNum *c) {
 
   for (int i = 0; i <= b->nDigits; i++) {
     for (int j = 1; j <= toInt(b->digits[i]); j++) {
-      addBigNum(c, &row, &tmp);
+      tmp = addBigNum(c, &row);
       *c = tmp;
     }
 
@@ -215,7 +213,7 @@ void BigNum::multiplyBigNum(BigNum *a, BigNum *b, BigNum *c) {
 
   c->signBit = a->signBit * b->signBit;
 
-  adjustDigits(c);
+  c->adjustDigits();
 }
 
 int BigNum::toInt(char c) {
