@@ -10,16 +10,16 @@
 
 class BigNum {
   private:
-    char digits[MAXDIGITS];
+    char* digits;
     int nDigits;
     int signBit;
 
-    void init();
+    void initDigits();
     void digitShift(BigNum *n, int d);
-    BigNum addBigNum(BigNum *a, BigNum *b);
-    BigNum subtractBigNum(BigNum *a, BigNum *b);
-    BigNum multiplyBigNum(BigNum *a, BigNum *b);
-    BigNum& adjustDigits();
+    void addBigNum(BigNum *a, BigNum *b, BigNum *c);
+    void subtractBigNum(BigNum *a, BigNum *b, BigNum *c);
+    void multiplyBigNum(BigNum *a, BigNum *b, BigNum *c);
+    void adjustDigits();
     int compareBigNum(BigNum *a, BigNum*b);
     int toInt(char c);
     char toChar(int d);
@@ -27,6 +27,11 @@ class BigNum {
   public:
     BigNum();
     BigNum(std::string str);
+    ~BigNum();
+    BigNum(BigNum &&n);
+    BigNum& operator=(const BigNum &n);
+    BigNum& operator=(BigNum &&n);
+
 
     BigNum operator+ (BigNum &n);
     BigNum operator- (BigNum &n);
