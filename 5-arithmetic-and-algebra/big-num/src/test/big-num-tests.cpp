@@ -9,17 +9,20 @@ void additionTests();
 void subtractionTests();
 void multiplicationTests();
 
-struct ToStringTestCase {
+struct ToStringTestCase
+{
   string input;
   string expected;
 
-  ToStringTestCase (string _input, string _expected) {
+  ToStringTestCase (string _input, string _expected)
+  {
     input = _input;
     expected = _expected;
   };
 };
 
-struct ComparisonTestCase {
+struct ComparisonTestCase
+{
   string a;
   string b;
   bool isLessThan;
@@ -27,7 +30,8 @@ struct ComparisonTestCase {
   bool isNotEqual;
   bool isGreaterThan;
 
-  ComparisonTestCase(string _a, string _b, bool _isLessThan, bool _isEqual, bool _isNotEqual, bool _isGreaterThan) {
+  ComparisonTestCase(string _a, string _b, bool _isLessThan, bool _isEqual, bool _isNotEqual, bool _isGreaterThan)
+  {
     a = _a;
     b = _b;
     isLessThan = _isLessThan;
@@ -37,19 +41,22 @@ struct ComparisonTestCase {
   }
 };
 
-struct MathTestCase {
+struct MathTestCase
+{
   string a;
   string b;
   string expected;
 
-  MathTestCase(string _a, string _b, string _expected) {
+  MathTestCase(string _a, string _b, string _expected)
+  {
     a = _a;
     b = _b;
     expected = _expected;
   }
 };
 
-int main() {
+int main()
+{
   toStringTests();
   comparisonTests();
   additionTests();
@@ -57,7 +64,8 @@ int main() {
   multiplicationTests();
 }
 
-void toStringTests() {
+void toStringTests()
+{
   vector<ToStringTestCase> testCases = {
     ToStringTestCase("0", "0"),
     ToStringTestCase("+0", "0"),
@@ -73,18 +81,21 @@ void toStringTests() {
     ToStringTestCase("-10000000000000000000", "-10000000000000000000")
   };
 
-  for (uint i = 0; i < testCases.size(); i++) {
+  for (uint i = 0; i < testCases.size(); i++)
+  {
     ToStringTestCase tc = testCases.at(i);
 
     string actual = BigNum(tc.input).toString();
 
-    if (actual != tc.expected) {
+    if (actual != tc.expected)
+    {
       cout << tc.input << " == expected: " << tc.expected << ", actual: " << actual << endl;
     }
   }
 }
 
-void comparisonTests() {
+void comparisonTests()
+{
   vector<ComparisonTestCase> testCases = {
     ComparisonTestCase("-1", "-1", false, true, false, false),
     ComparisonTestCase("-1", "0", true, false, true, false),
@@ -116,7 +127,8 @@ void comparisonTests() {
     ComparisonTestCase("1", "12", true, false, true, false),
   };
 
-  for (uint i = 0; i < testCases.size(); i++) {
+  for (uint i = 0; i < testCases.size(); i++)
+  {
     ComparisonTestCase tc = testCases.at(i);
 
     BigNum a = BigNum(tc.a);
@@ -127,25 +139,30 @@ void comparisonTests() {
     bool isNotEqual = a != b;
     bool isGreaterThan = a > b;
 
-    if (isLessThan != tc.isLessThan) {
+    if (isLessThan != tc.isLessThan)
+    {
       cout << a << " < " << b << " == expected: " << tc.isLessThan << ", actual: " << isLessThan << endl;
     }
 
-    if (isEqual != tc.isEqual) {
+    if (isEqual != tc.isEqual)
+    {
       cout << a << " == " << b << " == expected: " << tc.isEqual << ", actual: " << isEqual << endl;
     }
 
-    if (isNotEqual != tc.isNotEqual) {
+    if (isNotEqual != tc.isNotEqual)
+    {
       cout << a << " != " << b << " == expected: " << tc.isNotEqual << ", actual: " << isNotEqual << endl;
     }
 
-    if (isGreaterThan != tc.isGreaterThan) {
+    if (isGreaterThan != tc.isGreaterThan)
+    {
       cout << a << " > " << b << " == expected: " << tc.isGreaterThan << ", actual: " << isGreaterThan << endl;
     }
   }
 }
 
-void additionTests() {
+void additionTests()
+{
   vector<MathTestCase> testCases = {
     MathTestCase("-1", "-1", "-2"),
     MathTestCase("-1", "0", "-1"),
@@ -177,7 +194,8 @@ void additionTests() {
     MathTestCase("1", "12", "13"),
   };
 
-  for (uint i = 0; i < testCases.size(); i++) {
+  for (uint i = 0; i < testCases.size(); i++)
+  {
     MathTestCase tc = testCases.at(i);
 
     BigNum a = BigNum(tc.a);
@@ -185,12 +203,14 @@ void additionTests() {
     BigNum expected = BigNum(tc.expected);
     BigNum actual = a + b;
 
-    if (expected != actual) {
+    if (expected != actual)
+    {
       cout << a << " + " << b << " = expected: " << expected << ", actual: " << actual << endl;
     }
   }
 }
-void subtractionTests() {
+void subtractionTests()
+{
   vector<MathTestCase> testCases = {
     MathTestCase("-1", "-1", "0"),
     MathTestCase("-1", "0", "-1"),
@@ -222,7 +242,8 @@ void subtractionTests() {
     MathTestCase("1", "12", "-11"),
   };
 
-  for (uint i = 0; i < testCases.size(); i++) {
+  for (uint i = 0; i < testCases.size(); i++)
+  {
     MathTestCase tc = testCases.at(i);
 
     BigNum a = BigNum(tc.a);
@@ -230,13 +251,15 @@ void subtractionTests() {
     BigNum expected = BigNum(tc.expected);
     BigNum actual = a - b;
 
-    if (expected != actual) {
+    if (expected != actual)
+    {
       cout << a << " - " << b << " = expected: " << expected << ", actual: " << actual << endl;
     }
   }
 }
 
-void multiplicationTests() {
+void multiplicationTests()
+{
   vector<MathTestCase> testCases = {
     MathTestCase("-1", "-1", "1"),
     MathTestCase("-1", "0", "0"),
@@ -268,7 +291,8 @@ void multiplicationTests() {
     MathTestCase("1", "12", "12"),
   };
 
-  for (uint i = 0; i < testCases.size(); i++) {
+  for (uint i = 0; i < testCases.size(); i++)
+  {
     MathTestCase tc = testCases.at(i);
 
     BigNum a = BigNum(tc.a);
@@ -276,7 +300,8 @@ void multiplicationTests() {
     BigNum expected = BigNum(tc.expected);
     BigNum actual = a * b;
 
-    if (expected != actual) {
+    if (expected != actual)
+    {
       cout << a << " * " << b << " = expected: " << expected << ", actual: " << actual << endl;
     }
   }
