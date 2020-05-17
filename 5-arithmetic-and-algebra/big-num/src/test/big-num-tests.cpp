@@ -3,12 +3,6 @@
 #include "../main/big-num.h"
 using namespace std;
 
-void toStringTests();
-void comparisonTests();
-void additionTests();
-void subtractionTests();
-void multiplicationTests();
-
 struct ToStringTestCase
 {
   string input;
@@ -46,22 +40,69 @@ struct MathTestCase
   string a;
   string b;
   string expected;
+  string sum;
+  string difference;
+  string product;
 
-  MathTestCase(string _a, string _b, string _expected)
+  MathTestCase(string _a, string _b, string _sum, string _difference, string _product)
   {
     a = _a;
     b = _b;
-    expected = _expected;
+    sum = _sum;
+    difference = _difference;
+    product = _product;
   }
 };
+
+void toStringTests();
+void comparisonTests();
+void mathTests();
+void additionTests(vector<MathTestCase> testCases);
+void subtractionTests(vector<MathTestCase> testCases);
+void multiplicationTests(vector<MathTestCase> testCases);
 
 int main()
 {
   toStringTests();
   comparisonTests();
-  additionTests();
-  subtractionTests();
-  multiplicationTests();
+  mathTests();
+}
+
+void mathTests() {
+  vector<MathTestCase> testCases = {
+    MathTestCase("-1", "-1", "-2", "0", "1"),
+    MathTestCase("-1", "0", "-1", "-1", "0"),
+    MathTestCase("-1", "1", "0", "-2", "-1"),
+    MathTestCase("0", "-1", "-1", "1", "0"),
+    MathTestCase("0", "0", "0", "0", "0"),
+    MathTestCase("0", "1", "1", "-1", "0"),
+    MathTestCase("1", "-1", "0", "2", "-1"),
+    MathTestCase("1", "0", "1", "1", "0"),
+    MathTestCase("1", "1", "2", "0", "1"),
+
+    MathTestCase("-12", "-12", "-24", "0", "144"),
+    MathTestCase("-12", "0", "-12", "-12", "0"),
+    MathTestCase("-12", "12", "0", "-24", "-144"),
+    MathTestCase("0", "-12", "-12", "12", "0"),
+    MathTestCase("0", "0", "0", "0", "0"),
+    MathTestCase("0", "12", "12", "-12", "0"),
+    MathTestCase("12", "-12", "0", "24", "-144"),
+    MathTestCase("12", "0", "12", "12", "0"),
+    MathTestCase("12", "12", "24", "0", "144"),
+
+    MathTestCase("-1", "-12", "-13", "11", "12"),
+    MathTestCase("-12", "0", "-12", "-12", "0"),
+    MathTestCase("-1", "12", "11", "-13", "-12"),
+    MathTestCase("0", "-12", "-12", "12", "0"),
+    MathTestCase("0", "12", "12", "-12", "0"),
+    MathTestCase("1", "-12", "-11", "13", "-12"),
+    MathTestCase("12", "0", "12", "12", "0"),
+    MathTestCase("1", "12", "13", "-11", "12"),
+  };
+
+  additionTests(testCases);
+  subtractionTests(testCases);
+  multiplicationTests(testCases);
 }
 
 void toStringTests()
@@ -83,9 +124,9 @@ void toStringTests()
 
   for (uint i = 0; i < testCases.size(); i++)
   {
-    ToStringTestCase tc = testCases.at(i);
+    auto tc = testCases.at(i);
 
-    string actual = BigNum(tc.input).toString();
+    auto actual = BigNum(tc.input).toString();
 
     if (actual != tc.expected)
     {
@@ -124,20 +165,20 @@ void comparisonTests()
     ComparisonTestCase("0", "12", true, false, true, false),
     ComparisonTestCase("1", "-12", false, false, true, true),
     ComparisonTestCase("12", "0", false, false, true, true),
-    ComparisonTestCase("1", "12", true, false, true, false),
+    ComparisonTestCase("1", "12", true, false, true, false)
   };
 
   for (uint i = 0; i < testCases.size(); i++)
   {
-    ComparisonTestCase tc = testCases.at(i);
+    auto tc = testCases.at(i);
 
-    BigNum a = BigNum(tc.a);
-    BigNum b = BigNum(tc.b);
+    auto a = BigNum(tc.a);
+    auto b = BigNum(tc.b);
 
-    bool isLessThan = a < b;
-    bool isEqual = a == b;
-    bool isNotEqual = a != b;
-    bool isGreaterThan = a > b;
+    auto isLessThan = a < b;
+    auto isEqual = a == b;
+    auto isNotEqual = a != b;
+    auto isGreaterThan = a > b;
 
     if (isLessThan != tc.isLessThan)
     {
@@ -161,47 +202,17 @@ void comparisonTests()
   }
 }
 
-void additionTests()
+void additionTests(vector<MathTestCase> testCases)
 {
-  vector<MathTestCase> testCases = {
-    MathTestCase("-1", "-1", "-2"),
-    MathTestCase("-1", "0", "-1"),
-    MathTestCase("-1", "1", "0"),
-    MathTestCase("0", "-1", "-1"),
-    MathTestCase("0", "0", "0"),
-    MathTestCase("0", "1", "1"),
-    MathTestCase("1", "-1", "0"),
-    MathTestCase("1", "0", "1"),
-    MathTestCase("1", "1", "2"),
-
-    MathTestCase("-12", "-12", "-24"),
-    MathTestCase("-12", "0", "-12"),
-    MathTestCase("-12", "12", "0"),
-    MathTestCase("0", "-12", "-12"),
-    MathTestCase("0", "0", "0"),
-    MathTestCase("0", "12", "12"),
-    MathTestCase("12", "-12", "0"),
-    MathTestCase("12", "0", "12"),
-    MathTestCase("12", "12", "24"),
-
-    MathTestCase("-1", "-12", "-13"),
-    MathTestCase("-12", "0", "-12"),
-    MathTestCase("-1", "12", "11"),
-    MathTestCase("0", "-12", "-12"),
-    MathTestCase("0", "12", "12"),
-    MathTestCase("1", "-12", "-11"),
-    MathTestCase("12", "0", "12"),
-    MathTestCase("1", "12", "13"),
-  };
-
   for (uint i = 0; i < testCases.size(); i++)
   {
-    MathTestCase tc = testCases.at(i);
+    auto tc = testCases.at(i);
+    auto a = BigNum(tc.a);
+    auto b = BigNum(tc.b);
 
-    BigNum a = BigNum(tc.a);
-    BigNum b = BigNum(tc.b);
-    BigNum expected = BigNum(tc.expected);
-    BigNum actual = a + b;
+    auto actual = a + b;
+
+    auto expected = BigNum(tc.sum);
 
     if (expected != actual)
     {
@@ -209,47 +220,17 @@ void additionTests()
     }
   }
 }
-void subtractionTests()
+void subtractionTests(vector<MathTestCase> testCases)
 {
-  vector<MathTestCase> testCases = {
-    MathTestCase("-1", "-1", "0"),
-    MathTestCase("-1", "0", "-1"),
-    MathTestCase("-1", "1", "-2"),
-    MathTestCase("0", "-1", "1"),
-    MathTestCase("0", "0", "0"),
-    MathTestCase("0", "1", "-1"),
-    MathTestCase("1", "-1", "2"),
-    MathTestCase("1", "0", "1"),
-    MathTestCase("1", "1", "0"),
-
-    MathTestCase("-12", "-12", "0"),
-    MathTestCase("-12", "0", "-12"),
-    MathTestCase("-12", "12", "-24"),
-    MathTestCase("0", "-12", "12"),
-    MathTestCase("0", "0", "0"),
-    MathTestCase("0", "12", "-12"),
-    MathTestCase("12", "-12", "24"),
-    MathTestCase("12", "0", "12"),
-    MathTestCase("12", "12", "0"),
-
-    MathTestCase("-1", "-12", "11"),
-    MathTestCase("-12", "0", "-12"),
-    MathTestCase("-1", "12", "-13"),
-    MathTestCase("0", "-12", "12"),
-    MathTestCase("0", "12", "-12"),
-    MathTestCase("1", "-12", "13"),
-    MathTestCase("12", "0", "12"),
-    MathTestCase("1", "12", "-11"),
-  };
-
   for (uint i = 0; i < testCases.size(); i++)
   {
-    MathTestCase tc = testCases.at(i);
+    auto tc = testCases.at(i);
+    auto a = BigNum(tc.a);
+    auto b = BigNum(tc.b);
 
-    BigNum a = BigNum(tc.a);
-    BigNum b = BigNum(tc.b);
-    BigNum expected = BigNum(tc.expected);
-    BigNum actual = a - b;
+    auto actual = a - b;
+
+    auto expected = BigNum(tc.difference);
 
     if (expected != actual)
     {
@@ -258,47 +239,17 @@ void subtractionTests()
   }
 }
 
-void multiplicationTests()
+void multiplicationTests(vector<MathTestCase> testCases)
 {
-  vector<MathTestCase> testCases = {
-    MathTestCase("-1", "-1", "1"),
-    MathTestCase("-1", "0", "0"),
-    MathTestCase("-1", "1", "-1"),
-    MathTestCase("0", "-1", "0"),
-    MathTestCase("0", "0", "0"),
-    MathTestCase("0", "1", "0"),
-    MathTestCase("1", "-1", "-1"),
-    MathTestCase("1", "0", "0"),
-    MathTestCase("1", "1", "1"),
-
-    MathTestCase("-12", "-12", "144"),
-    MathTestCase("-12", "0", "0"),
-    MathTestCase("-12", "12", "-144"),
-    MathTestCase("0", "-12", "0"),
-    MathTestCase("0", "0", "0"),
-    MathTestCase("0", "12", "0"),
-    MathTestCase("12", "-12", "-144"),
-    MathTestCase("12", "0", "0"),
-    MathTestCase("12", "12", "144"),
-
-    MathTestCase("-1", "-12", "12"),
-    MathTestCase("-12", "0", "0"),
-    MathTestCase("-1", "12", "-12"),
-    MathTestCase("0", "-12", "0"),
-    MathTestCase("0", "12", "0"),
-    MathTestCase("1", "-12", "-12"),
-    MathTestCase("12", "0", "0"),
-    MathTestCase("1", "12", "12"),
-  };
-
   for (uint i = 0; i < testCases.size(); i++)
   {
-    MathTestCase tc = testCases.at(i);
+    auto tc = testCases.at(i);
+    auto a = BigNum(tc.a);
+    auto b = BigNum(tc.b);
 
-    BigNum a = BigNum(tc.a);
-    BigNum b = BigNum(tc.b);
-    BigNum expected = BigNum(tc.expected);
-    BigNum actual = a * b;
+    auto actual = a * b;
+
+    auto expected = BigNum(tc.product);
 
     if (expected != actual)
     {
