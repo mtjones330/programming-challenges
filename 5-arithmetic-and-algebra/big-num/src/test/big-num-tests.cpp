@@ -60,6 +60,7 @@ void mathTests();
 void additionTests(vector<MathTestCase> testCases);
 void subtractionTests(vector<MathTestCase> testCases);
 void multiplicationTests(vector<MathTestCase> testCases);
+void divisionTests();
 
 int main()
 {
@@ -103,6 +104,7 @@ void mathTests() {
   additionTests(testCases);
   subtractionTests(testCases);
   multiplicationTests(testCases);
+  divisionTests();
 }
 
 void toStringTests()
@@ -256,4 +258,13 @@ void multiplicationTests(vector<MathTestCase> testCases)
       cout << a << " * " << b << " = expected: " << expected << ", actual: " << actual << endl;
     }
   }
+}
+
+void divisionTests()
+{
+  auto a = BigNum("13");
+  auto b = BigNum("2");
+  auto c = a / b;
+
+  cout << c << endl;
 }

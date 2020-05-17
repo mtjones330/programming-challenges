@@ -12,17 +12,20 @@ BigNum::BigNum(std::string str)
 {
   initDigits();
 
-  if (str[0] == '+' || str[0] == '-') {
+  if (str[0] == '+' || str[0] == '-')
+  {
     signBit = str[0] == '+' ? PLUS : MINUS;
     str = str.substr(1);
   }
-  else {
+  else
+  {
     signBit = PLUS;
   }
 
   nDigits = str.length();
 
-  for (int i = 0; i < nDigits; i++) {
+  for (int i = 0; i < nDigits; i++)
+  {
     digits[i] = str[nDigits - 1 - i];
   }
 }
@@ -105,6 +108,13 @@ BigNum BigNum::operator* (BigNum &n)
   return c;
 }
 
+BigNum BigNum::operator/ (BigNum &n)
+{
+  BigNum c;
+  divideBigNum(this, &n, &c);
+  return c;
+}
+
 bool BigNum::operator< (BigNum &n)
 {
   if (compareBigNum(this, &n) == LESSTHAN)
@@ -138,6 +148,11 @@ bool BigNum::operator> (BigNum &n)
   }
 
   return false;
+}
+
+bool BigNum::operator>= (BigNum &n)
+{
+  return *this > n || *this == n;
 }
 
 int BigNum::compareBigNum(BigNum *a, BigNum *b)
@@ -230,7 +245,6 @@ void BigNum::addBigNum(BigNum *a, BigNum *b, BigNum *c)
   {
     c->signBit = a->signBit;
   }
-
   else
   {
     if (a->signBit == MINUS)
@@ -239,7 +253,6 @@ void BigNum::addBigNum(BigNum *a, BigNum *b, BigNum *c)
       subtractBigNum(b, a, c);
       a->signBit = MINUS;
     }
-
     else
     {
       b->signBit  = PLUS;
@@ -288,9 +301,40 @@ void BigNum::multiplyBigNum(BigNum *a, BigNum *b, BigNum *c)
   c->adjustDigits();
 }
 
+void BigNum::divideBigNum(BigNum *a, BigNum *b, BigNum *c)
+{
+  BigNum tmp, row;
+
+  int aSignBit = a->signBit;
+  int bSignBit = b->signBit;
+
+  a->signBit = PLUS;
+  b->signBit = PLUS;
+  c->nDigits = a->nDigits;
+
+  for (int i = a->nDigits - 1; i >= 0; i--)
+  {
+    digitShift(&row, 1);
+    row.digits[0] = a->digits[i];
+
+    while (row >= *b)
+    {
+      c->digits[i]++;
+      subtractBigNum(&row, b, &tmp);
+      row = tmp;
+    }
+  }
+
+  a->signBit = aSignBit;
+  b->signBit = bSignBit;
+  c->signBit = a->signBit * b->signBit;
+
+  c->adjustDigits();
+}
+
 void BigNum::digitShift(BigNum *n, int d)
 {
-  if (n->nDigits == 0 && toInt(n->digits[0]) == 0)
+  if (n->nDigits == 1 && toInt(n->digits[0]) == 0)
   {
     return;
   }
