@@ -99,6 +99,11 @@ void mathTests() {
     MathTestCase("1", "-12", "-11", "13", "-12"),
     MathTestCase("12", "0", "12", "12", "0"),
     MathTestCase("1", "12", "13", "-11", "12"),
+
+    MathTestCase(UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED),
+    MathTestCase(UNDEFINED, "12", UNDEFINED, UNDEFINED, UNDEFINED),
+    MathTestCase("12", UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED)
+
   };
 
   additionTests(testCases);
@@ -167,7 +172,9 @@ void comparisonTests()
     ComparisonTestCase("0", "12", true, false, true, false),
     ComparisonTestCase("1", "-12", false, false, true, true),
     ComparisonTestCase("12", "0", false, false, true, true),
-    ComparisonTestCase("1", "12", true, false, true, false)
+    ComparisonTestCase("1", "12", true, false, true, false),
+    ComparisonTestCase("undefined", "undefined", false, true, false, false),
+    ComparisonTestCase("undefined", "12", false, false, true, false)
   };
 
   for (uint i = 0; i < testCases.size(); i++)
@@ -262,7 +269,7 @@ void multiplicationTests(vector<MathTestCase> testCases)
 
 void divisionTests()
 {
-  auto a = BigNum("13");
+  auto a = BigNum("0");
   auto b = BigNum("2");
   auto c = a / b;
 

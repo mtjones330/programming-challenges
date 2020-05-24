@@ -2,14 +2,20 @@
 #include "big-num.h"
 
 BigNum::BigNum()
-  : digits(new char[MAXDIGITS]), nDigits(1), signBit(PLUS)
+  : digits(new char[MAXDIGITS]), nDigits(1), signBit(PLUS), isUndefined(false)
 {
   initDigits();
 }
 
 BigNum::BigNum(std::string str)
-  : digits(new char[MAXDIGITS])
+  : digits(new char[MAXDIGITS]), isUndefined(false)
 {
+  if (str == UNDEFINED)
+  {
+    isUndefined = true;
+    return;
+  }
+
   initDigits();
 
   if (str[0] == '+' || str[0] == '-')
@@ -43,6 +49,8 @@ BigNum::~BigNum()
   delete[] digits;
 }
 
+BigNum BigNum::ZERO{"0"};
+
 BigNum& BigNum::operator=(const BigNum &n)
 {
   if (&n == this)
@@ -57,6 +65,7 @@ BigNum& BigNum::operator=(const BigNum &n)
 
   nDigits = n.nDigits;
   signBit = n.signBit;
+  isUndefined = n.isUndefined;
 
   return *this;
 }
@@ -66,6 +75,7 @@ BigNum::BigNum(BigNum &&n)
 {
   n.nDigits = 0;
   n.digits = nullptr;
+  n.isUndefined = true;
 }
 
 BigNum& BigNum::operator=(BigNum &&n)
@@ -80,9 +90,11 @@ BigNum& BigNum::operator=(BigNum &&n)
   digits = n.digits;
   nDigits = n.nDigits;
   signBit = n.signBit;
+  isUndefined = n.isUndefined;
 
   n.nDigits = 0;
   n.digits = nullptr;
+  n.isUndefined = true;
 
   return *this;
 }
@@ -90,34 +102,74 @@ BigNum& BigNum::operator=(BigNum &&n)
 BigNum BigNum::operator+ (BigNum &n)
 {
   BigNum c;
-  addBigNum(this, &n, &c);
+
+  if (this->isUndefined == true || n.isUndefined == true)
+  {
+    c.isUndefined = true;
+  }
+  else
+  {
+    addBigNum(this, &n, &c);
+  }
+
   return c;
 }
 
 BigNum BigNum::operator- (BigNum &n)
 {
   BigNum c;
-  subtractBigNum(this, &n, &c);
+
+  if (this->isUndefined == true || n.isUndefined == true)
+  {
+    c.isUndefined = true;
+  }
+  else
+  {
+    subtractBigNum(this, &n, &c);
+  }
+
   return c;
 }
 
 BigNum BigNum::operator* (BigNum &n)
 {
   BigNum c;
-  multiplyBigNum(this, &n, &c);
+
+  if (this->isUndefined == true || n.isUndefined == true)
+  {
+    c.isUndefined = true;
+  }
+  else
+  {
+    multiplyBigNum(this, &n, &c);
+  }
+
   return c;
 }
 
 BigNum BigNum::operator/ (BigNum &n)
 {
   BigNum c;
-  divideBigNum(this, &n, &c);
+
+  if (*this == BigNum::ZERO || this->isUndefined == true || n.isUndefined == true)
+  {
+    c.isUndefined = true;
+  }
+  else
+  {
+    divideBigNum(this, &n, &c);
+  }
+
   return c;
 }
 
 bool BigNum::operator< (BigNum &n)
 {
-  if (compareBigNum(this, &n) == LESSTHAN)
+  if (this->isUndefined == true || n.isUndefined == true)
+  {
+    return false;
+  }
+  else if (compareBigNum(this, &n) == LESSTHAN)
   {
     return true;
   }
@@ -127,7 +179,15 @@ bool BigNum::operator< (BigNum &n)
 
 bool BigNum::operator== (BigNum &n)
 {
-  if(compareBigNum(this, &n) == EQUALTO)
+  if (this->isUndefined == true && n.isUndefined == true)
+  {
+    return true;
+  }
+  else if (this->isUndefined == true || n.isUndefined == true)
+  {
+    return false;
+  }
+  else if(compareBigNum(this, &n) == EQUALTO)
   {
     return true;
   }
@@ -142,7 +202,11 @@ bool BigNum::operator!= (BigNum &n)
 
 bool BigNum::operator> (BigNum &n)
 {
-  if (compareBigNum(this, &n) == GREATERTHAN)
+  if (this->isUndefined == true || n.isUndefined == true)
+  {
+    return false;
+  }
+  else if (compareBigNum(this, &n) == GREATERTHAN)
   {
     return true;
   }
@@ -364,6 +428,11 @@ char BigNum::toChar(int d)
 
 std::string BigNum::toString()
 {
+  if (isUndefined == true)
+  {
+    return "undefined";
+  }
+
   std::string result = "";
 
   if (signBit == MINUS && !(nDigits == 1 && digits[0] == '0'))

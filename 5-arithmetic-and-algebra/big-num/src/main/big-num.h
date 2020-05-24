@@ -7,12 +7,14 @@
 #define LESSTHAN -1
 #define EQUALTO 0
 #define GREATERTHAN 1
+#define UNDEFINED "undefined"
 
 class BigNum {
   private:
     char* digits;
     int nDigits;
     int signBit;
+    bool isUndefined;
 
     void initDigits();
     void digitShift(BigNum *n, int d);
@@ -26,6 +28,7 @@ class BigNum {
     char toChar(int d);
 
   public:
+    static BigNum ZERO;
     BigNum();
     BigNum(std::string str);
     ~BigNum();
