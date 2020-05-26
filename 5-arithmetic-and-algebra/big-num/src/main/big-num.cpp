@@ -36,12 +36,12 @@ BigNum::BigNum(std::string str)
   }
 }
 
-void BigNum::initDigits()
+BigNum::BigNum(BigNum &&n)
+  : digits(n.digits), nDigits(n.nDigits), signBit(n.signBit)
 {
-  for (int i = 0; i < MAXDIGITS; i++)
-  {
-    digits[i] = '0';
-  }
+  n.nDigits = 0;
+  n.digits = nullptr;
+  n.isUndefined = true;
 }
 
 BigNum::~BigNum()
@@ -68,14 +68,6 @@ BigNum& BigNum::operator=(const BigNum &n)
   return *this;
 }
 
-BigNum::BigNum(BigNum &&n)
-  : digits(n.digits), nDigits(n.nDigits), signBit(n.signBit)
-{
-  n.nDigits = 0;
-  n.digits = nullptr;
-  n.isUndefined = true;
-}
-
 BigNum& BigNum::operator=(BigNum &&n)
 {
   if (&n == this)
@@ -95,6 +87,14 @@ BigNum& BigNum::operator=(BigNum &&n)
   n.isUndefined = true;
 
   return *this;
+}
+
+void BigNum::initDigits()
+{
+  for (int i = 0; i < MAXDIGITS; i++)
+  {
+    digits[i] = '0';
+  }
 }
 
 BigNum BigNum::ZERO{"0"};
@@ -219,47 +219,44 @@ bool BigNum::operator>= (BigNum &n)
   return *this > n || *this == n;
 }
 
-int BigNum::compareBigNum(BigNum *a, BigNum *b)
+void BigNum::addBigNum(BigNum *a, BigNum *b, BigNum *c)
 {
-  if (a->signBit == MINUS && b->signBit == PLUS) return LESSTHAN;
-  if (a->signBit == PLUS && b->signBit == MINUS) return GREATERTHAN;
-
-  if (a->signBit == PLUS && b->signBit == PLUS)
+  if (a->signBit == b->signBit)
   {
-    if (a->nDigits < b->nDigits) return LESSTHAN;
-    if (a->nDigits > b->nDigits) return GREATERTHAN;
+    c->signBit = a->signBit;
+  }
+  else
+  {
+    if (a->signBit == MINUS)
+    {
+      a->signBit = PLUS;
+      subtractBigNum(b, a, c);
+      a->signBit = MINUS;
+    }
+    else
+    {
+      b->signBit  = PLUS;
+      subtractBigNum(a, b, c);
+      b->signBit = MINUS;
+    }
+
+    return;
   }
 
-  if (a->signBit == MINUS && b->signBit == MINUS)
+  c->nDigits = a->nDigits + b->nDigits;
+
+  int carry = 0;
+
+  for (int i = 0; i <= (c->nDigits); i++)
   {
-    if (a->nDigits < b->nDigits) return GREATERTHAN;
-    if (a->nDigits > b->nDigits) return LESSTHAN;
+    int addend = carry + toInt(a->digits[i]) + toInt(b->digits[i]);
+
+    c->digits[i] = toChar(addend % 10);
+    carry = addend / 10;
   }
 
-  for (int i = a->nDigits - 1; i >= 0; i--)
-  {
-    if (a->digits[i] > b->digits[i]) return PLUS * a->signBit;
-    if (a->digits[i] < b->digits[i]) return MINUS * a->signBit;
-  }
-
-  return EQUALTO;
+  c->adjustDigits();
 }
-
-void BigNum::adjustDigits()
-{
-  while (nDigits > 0 && toInt(digits[nDigits]) == 0)
-  {
-    nDigits--;
-  }
-
-  if (nDigits == 0 && toInt(digits[0]) == 0)
-  {
-    signBit = PLUS;
-  }
-
-  nDigits++;
-}
-
 
 void BigNum::subtractBigNum(BigNum *a, BigNum *b, BigNum *c)
 {
@@ -298,45 +295,6 @@ void BigNum::subtractBigNum(BigNum *a, BigNum *b, BigNum *c)
     }
 
     c->digits[i] = toChar(v % 10);
-  }
-
-  c->adjustDigits();
-}
-
-void BigNum::addBigNum(BigNum *a, BigNum *b, BigNum *c)
-{
-  if (a->signBit == b->signBit)
-  {
-    c->signBit = a->signBit;
-  }
-  else
-  {
-    if (a->signBit == MINUS)
-    {
-      a->signBit = PLUS;
-      subtractBigNum(b, a, c);
-      a->signBit = MINUS;
-    }
-    else
-    {
-      b->signBit  = PLUS;
-      subtractBigNum(a, b, c);
-      b->signBit = MINUS;
-    }
-
-    return;
-  }
-
-  c->nDigits = a->nDigits + b->nDigits;
-
-  int carry = 0;
-
-  for (int i = 0; i <= (c->nDigits); i++)
-  {
-    int addend = carry + toInt(a->digits[i]) + toInt(b->digits[i]);
-
-    c->digits[i] = toChar(addend % 10);
-    carry = addend / 10;
   }
 
   c->adjustDigits();
@@ -394,6 +352,48 @@ void BigNum::divideBigNum(BigNum *a, BigNum *b, BigNum *c)
   c->signBit = a->signBit * b->signBit;
 
   c->adjustDigits();
+}
+
+
+int BigNum::compareBigNum(BigNum *a, BigNum *b)
+{
+  if (a->signBit == MINUS && b->signBit == PLUS) return LESSTHAN;
+  if (a->signBit == PLUS && b->signBit == MINUS) return GREATERTHAN;
+
+  if (a->signBit == PLUS && b->signBit == PLUS)
+  {
+    if (a->nDigits < b->nDigits) return LESSTHAN;
+    if (a->nDigits > b->nDigits) return GREATERTHAN;
+  }
+
+  if (a->signBit == MINUS && b->signBit == MINUS)
+  {
+    if (a->nDigits < b->nDigits) return GREATERTHAN;
+    if (a->nDigits > b->nDigits) return LESSTHAN;
+  }
+
+  for (int i = a->nDigits - 1; i >= 0; i--)
+  {
+    if (a->digits[i] > b->digits[i]) return PLUS * a->signBit;
+    if (a->digits[i] < b->digits[i]) return MINUS * a->signBit;
+  }
+
+  return EQUALTO;
+}
+
+void BigNum::adjustDigits()
+{
+  while (nDigits > 0 && toInt(digits[nDigits]) == 0)
+  {
+    nDigits--;
+  }
+
+  if (nDigits == 0 && toInt(digits[0]) == 0)
+  {
+    signBit = PLUS;
+  }
+
+  nDigits++;
 }
 
 void BigNum::digitShift(BigNum *n, int d)

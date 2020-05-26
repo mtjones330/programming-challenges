@@ -10,6 +10,30 @@
 #define UNDEFINED "undefined"
 
 class BigNum {
+  public:
+    static BigNum ZERO;
+
+    BigNum();
+    BigNum(std::string str);
+    BigNum(BigNum &&n);
+    ~BigNum();
+
+    BigNum& operator=(const BigNum &n);
+    BigNum& operator=(BigNum &&n);
+
+    BigNum operator+ (BigNum &n);
+    BigNum operator- (BigNum &n);
+    BigNum operator* (BigNum &n);
+    BigNum operator/ (BigNum &n);
+
+    bool operator< (BigNum &n);
+    bool operator== (BigNum &n);
+    bool operator!= (BigNum &n);
+    bool operator> (BigNum &n);
+    bool operator>=(BigNum &n);
+
+    std::string toString();
+
   private:
     char* digits;
     int nDigits;
@@ -27,27 +51,6 @@ class BigNum {
     int toInt(char c);
     char toChar(int d);
 
-  public:
-    static BigNum ZERO;
-    BigNum();
-    BigNum(std::string str);
-    ~BigNum();
-    BigNum(BigNum &&n);
-    BigNum& operator=(const BigNum &n);
-    BigNum& operator=(BigNum &&n);
-
-    BigNum operator+ (BigNum &n);
-    BigNum operator- (BigNum &n);
-    BigNum operator* (BigNum &n);
-    BigNum operator/ (BigNum &n);
-
-    bool operator< (BigNum &n);
-    bool operator== (BigNum &n);
-    bool operator!= (BigNum &n);
-    bool operator> (BigNum &n);
-    bool operator>=(BigNum &n);
-
-    std::string toString();
 };
 
 std::ostream & operator<<(std::ostream &out, BigNum &n);
