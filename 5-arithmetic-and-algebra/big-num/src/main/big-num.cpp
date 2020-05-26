@@ -49,8 +49,6 @@ BigNum::~BigNum()
   delete[] digits;
 }
 
-BigNum BigNum::ZERO{"0"};
-
 BigNum& BigNum::operator=(const BigNum &n)
 {
   if (&n == this)
@@ -98,6 +96,8 @@ BigNum& BigNum::operator=(BigNum &&n)
 
   return *this;
 }
+
+BigNum BigNum::ZERO{"0"};
 
 BigNum BigNum::operator+ (BigNum &n)
 {
@@ -151,7 +151,7 @@ BigNum BigNum::operator/ (BigNum &n)
 {
   BigNum c;
 
-  if (*this == BigNum::ZERO || this->isUndefined == true || n.isUndefined == true)
+  if (n == BigNum::ZERO || this->isUndefined == true || n.isUndefined == true)
   {
     c.isUndefined = true;
   }

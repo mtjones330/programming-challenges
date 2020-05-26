@@ -43,14 +43,16 @@ struct MathTestCase
   string sum;
   string difference;
   string product;
+  string quotient;
 
-  MathTestCase(string _a, string _b, string _sum, string _difference, string _product)
+  MathTestCase(string _a, string _b, string _sum, string _difference, string _product, string _quotient)
   {
     a = _a;
     b = _b;
     sum = _sum;
     difference = _difference;
     product = _product;
+    quotient = _quotient;
   }
 };
 
@@ -60,7 +62,7 @@ void mathTests();
 void additionTests(vector<MathTestCase> testCases);
 void subtractionTests(vector<MathTestCase> testCases);
 void multiplicationTests(vector<MathTestCase> testCases);
-void divisionTests();
+void divisionTests(vector<MathTestCase> testCases);
 
 int main()
 {
@@ -71,45 +73,59 @@ int main()
 
 void mathTests() {
   vector<MathTestCase> testCases = {
-    MathTestCase("-1", "-1", "-2", "0", "1"),
-    MathTestCase("-1", "0", "-1", "-1", "0"),
-    MathTestCase("-1", "1", "0", "-2", "-1"),
-    MathTestCase("0", "-1", "-1", "1", "0"),
-    MathTestCase("0", "0", "0", "0", "0"),
-    MathTestCase("0", "1", "1", "-1", "0"),
-    MathTestCase("1", "-1", "0", "2", "-1"),
-    MathTestCase("1", "0", "1", "1", "0"),
-    MathTestCase("1", "1", "2", "0", "1"),
+    MathTestCase("-1", "-1", "-2", "0", "1", "1"),
+    MathTestCase("-1", "0", "-1", "-1", "0", UNDEFINED),
+    MathTestCase("-1", "1", "0", "-2", "-1", "-1"),
+    MathTestCase("0", "-1", "-1", "1", "0", "0"),
+    MathTestCase("0", "0", "0", "0", "0", UNDEFINED),
+    MathTestCase("0", "1", "1", "-1", "0", "0"),
+    MathTestCase("1", "-1", "0", "2", "-1", "-1"),
+    MathTestCase("1", "0", "1", "1", "0", UNDEFINED),
+    MathTestCase("1", "1", "2", "0", "1", "1"),
 
-    MathTestCase("-12", "-12", "-24", "0", "144"),
-    MathTestCase("-12", "0", "-12", "-12", "0"),
-    MathTestCase("-12", "12", "0", "-24", "-144"),
-    MathTestCase("0", "-12", "-12", "12", "0"),
-    MathTestCase("0", "0", "0", "0", "0"),
-    MathTestCase("0", "12", "12", "-12", "0"),
-    MathTestCase("12", "-12", "0", "24", "-144"),
-    MathTestCase("12", "0", "12", "12", "0"),
-    MathTestCase("12", "12", "24", "0", "144"),
+    MathTestCase("-12", "-12", "-24", "0", "144", "1"),
+    MathTestCase("-12", "0", "-12", "-12", "0", UNDEFINED),
+    MathTestCase("-12", "12", "0", "-24", "-144", "-1"),
+    MathTestCase("0", "-12", "-12", "12", "0", "0"),
+    MathTestCase("0", "0", "0", "0", "0", UNDEFINED),
+    MathTestCase("0", "12", "12", "-12", "0", "0"),
+    MathTestCase("12", "-12", "0", "24", "-144", "-1"),
+    MathTestCase("12", "0", "12", "12", "0", UNDEFINED),
+    MathTestCase("12", "12", "24", "0", "144", "1"),
 
-    MathTestCase("-1", "-12", "-13", "11", "12"),
-    MathTestCase("-12", "0", "-12", "-12", "0"),
-    MathTestCase("-1", "12", "11", "-13", "-12"),
-    MathTestCase("0", "-12", "-12", "12", "0"),
-    MathTestCase("0", "12", "12", "-12", "0"),
-    MathTestCase("1", "-12", "-11", "13", "-12"),
-    MathTestCase("12", "0", "12", "12", "0"),
-    MathTestCase("1", "12", "13", "-11", "12"),
+    MathTestCase("-1", "-12", "-13", "11", "12", "0"),
+    MathTestCase("-12", "0", "-12", "-12", "0", UNDEFINED),
+    MathTestCase("-1", "12", "11", "-13", "-12", "0"),
+    MathTestCase("0", "-12", "-12", "12", "0", "0"),
+    MathTestCase("0", "12", "12", "-12", "0", "0"),
+    MathTestCase("1", "-12", "-11", "13", "-12", "0"),
+    MathTestCase("12", "0", "12", "12", "0", UNDEFINED),
+    MathTestCase("1", "12", "13", "-11", "12", "0"),
 
-    MathTestCase(UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED),
-    MathTestCase(UNDEFINED, "12", UNDEFINED, UNDEFINED, UNDEFINED),
-    MathTestCase("12", UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED)
+    MathTestCase(UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED),
+    MathTestCase(UNDEFINED, "12", UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED),
+    MathTestCase("12", UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED),
 
+    MathTestCase("6", "2", "8", "4", "12", "3"),
+    MathTestCase("96", "3", "99", "93", "288", "32"),
+    MathTestCase("3", "96", "99", "-93", "288", "0"),
+    MathTestCase("96", "96", "192", "0", "9216", "1"),
+    MathTestCase("333", "3", "336", "330", "999", "111"),
+
+    MathTestCase(
+      "5555555555",
+      "1111111111",
+      "6666666666",
+      "4444444444",
+      "6172839504938271605",
+      "5"
+    )
   };
 
   additionTests(testCases);
   subtractionTests(testCases);
   multiplicationTests(testCases);
-  divisionTests();
+  divisionTests(testCases);
 }
 
 void toStringTests()
@@ -173,8 +189,8 @@ void comparisonTests()
     ComparisonTestCase("1", "-12", false, false, true, true),
     ComparisonTestCase("12", "0", false, false, true, true),
     ComparisonTestCase("1", "12", true, false, true, false),
-    ComparisonTestCase("undefined", "undefined", false, true, false, false),
-    ComparisonTestCase("undefined", "12", false, false, true, false)
+    ComparisonTestCase(UNDEFINED, UNDEFINED, false, true, false, false),
+    ComparisonTestCase(UNDEFINED, "12", false, false, true, false)
   };
 
   for (uint i = 0; i < testCases.size(); i++)
@@ -191,22 +207,22 @@ void comparisonTests()
 
     if (isLessThan != tc.isLessThan)
     {
-      cout << a << " < " << b << " == expected: " << tc.isLessThan << ", actual: " << isLessThan << endl;
+      cout << a << " < " << b << " = expected: " << tc.isLessThan << ", actual: " << isLessThan << endl;
     }
 
     if (isEqual != tc.isEqual)
     {
-      cout << a << " == " << b << " == expected: " << tc.isEqual << ", actual: " << isEqual << endl;
+      cout << a << " == " << b << " = expected: " << tc.isEqual << ", actual: " << isEqual << endl;
     }
 
     if (isNotEqual != tc.isNotEqual)
     {
-      cout << a << " != " << b << " == expected: " << tc.isNotEqual << ", actual: " << isNotEqual << endl;
+      cout << a << " != " << b << " = expected: " << tc.isNotEqual << ", actual: " << isNotEqual << endl;
     }
 
     if (isGreaterThan != tc.isGreaterThan)
     {
-      cout << a << " > " << b << " == expected: " << tc.isGreaterThan << ", actual: " << isGreaterThan << endl;
+      cout << a << " > " << b << " = expected: " << tc.isGreaterThan << ", actual: " << isGreaterThan << endl;
     }
   }
 }
@@ -267,11 +283,21 @@ void multiplicationTests(vector<MathTestCase> testCases)
   }
 }
 
-void divisionTests()
+void divisionTests(vector<MathTestCase> testCases)
 {
-  auto a = BigNum("0");
-  auto b = BigNum("2");
-  auto c = a / b;
+  for (uint i = 0; i < testCases.size(); i++)
+  {
+    auto tc = testCases.at(i);
+    auto a = BigNum(tc.a);
+    auto b = BigNum(tc.b);
 
-  cout << c << endl;
+    auto actual = a / b;
+
+    auto expected = BigNum(tc.quotient);
+
+    if (expected != actual)
+    {
+      cout << a << " / " << b << " = expected: " << expected << ", actual: " << actual << endl;
+    }
+  }
 }
